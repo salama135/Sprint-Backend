@@ -22,21 +22,22 @@
     </style>
 </head>
 
-<div>
-    <div class="in">
-        First Number: <input type="number" id="num_1">
-    </div>
-    <div class="in">
-        Second Number: <input type="number" id="num_2">
-    </div>
-    <button onclick="myFunction()">Calculate Sum</button>
-</div>
-
-<div class="out">
-    <input type="text" id="sum">
-</div>
-
 <body>
+
+    <div>
+        <div class="in">
+            First Number: <input type="number" id="num_1">
+        </div>
+        <div class="in">
+            Second Number: <input type="number" id="num_2">
+        </div>
+        <button onclick="myFunction()">Calculate Sum</button>
+    </div>
+
+    <div class="out">
+        <input type="text" id="sum">
+    </div>
+
     <script>
         function myFunction() {
             let num_1 = document.getElementById("num_1").value;

@@ -11,8 +11,10 @@
     </style>
 </head>
 
-
 <body>
+
+    <div id="myData"></div>
+
     <script>
         const PASSWORD = "123";
         const NUMBER_OF_TRIES = 3;
@@ -166,7 +168,14 @@
 
         user.SetProperties();
 
-        console.log(user);
+        function DisplayData(data) {
+            var mainContainer = document.getElementById("myData");
+            var div = document.createElement("div");
+            div.innerHTML = 'User: ' + JSON.stringify(data);;
+            mainContainer.appendChild(div);
+        }
+
+        DisplayData(user);
     </script>
 </body>
 
