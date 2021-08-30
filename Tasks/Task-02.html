@@ -1,0 +1,173 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Task-02</title>
+
+    <style>
+
+    </style>
+</head>
+
+
+<body>
+    <script>
+        const PASSWORD = "123";
+        const NUMBER_OF_TRIES = 3;
+        let user = {
+            name: null,
+            password: null,
+            birthDate: {
+                month: null,
+                day: null,
+            },
+            horoscope: null,
+            SetName: function() {
+                let _name = "";
+                do {
+                    _name = prompt("What's your name?");
+
+                    if (NameIsValid(_name)) return _name;
+
+                } while (true);
+            },
+            SetPassword: function() {
+                let _password = "";
+                let numberOfTries = 0;
+
+                do {
+                    if (numberOfTries === NUMBER_OF_TRIES) {
+                        alert("you’ve entered wrong password 3 times")
+                        numberOfTries = NUMBER_OF_TRIES;
+                    }
+
+                    _password = prompt("What's the password?");
+
+                    if (PasswordIsValid(_password)) return _password;
+                    else numberOfTries++;
+
+                } while (true);
+            },
+            SetBirthMonth: function() {
+                let _month = "";
+                do {
+                    _month = prompt("What's your birth month?");
+
+                    if (MonthIsValid(_month)) return _month;
+                } while (true);
+            },
+            SetBirthDay: function() {
+                let _day = "";
+                do {
+                    _day = prompt("What's your birth day?");
+
+                    if (DayIsValid(this.birthDate.month, _day)) return _day;
+                } while (true);
+            },
+            SetBirthDate: function() {
+                this.birthDate.month = parseInt(this.SetBirthMonth());
+                this.birthDate.day = parseInt(this.SetBirthDay());
+            },
+            SetHoroscope: function() {
+                this.horoscope = ZodiacSign(this.birthDate.month, this.birthDate.day);
+            },
+            SetProperties: function() {
+                this.name = this.SetName();
+                this.password = this.SetPassword();
+                this.SetBirthDate();
+                this.SetHoroscope();
+            }
+        };
+
+        function IsEmpty(str) {
+            return (!str || str.length === 0);
+        }
+
+        function IsBlank(str) {
+            return (!str || /^\s*$/.test(str));
+        }
+
+        function NameIsValid(name) {
+            return (!IsEmpty(name) && !IsBlank(name));
+        }
+
+        function PasswordMatch(password) {
+            return (password === PASSWORD);
+        }
+
+        function PasswordIsValid(password) {
+            return (!IsEmpty(password) && !IsBlank(password) && PasswordMatch(password));
+        }
+
+        function ValueIsBetween(value, valid_min, valid_max) {
+            return value >= valid_min && value <= valid_max;
+        }
+
+        function MonthIsValid(month) {
+            if (isNaN(month)) return false;
+
+            return ValueIsBetween(month, 1, 12);
+        }
+
+        function IsLeapYear(year) {
+            return (year % 100 === 0) ? (year % 400 === 0) : (year % 4 === 0);
+        }
+
+        function DayIsValid(month, day) {
+
+            if (isNaN(month) && isNaN(day)) return false;
+
+            let result = false;
+
+            switch (month) {
+                case 1:
+                case 3:
+                case 5:
+                case 7:
+                case 8:
+                case 10:
+                case 12:
+                    result = ValueIsBetween(day, 1, 31);
+                    break;
+                case 4:
+                case 6:
+                case 9:
+                case 11:
+                    result = ValueIsBetween(day, 1, 30);
+                    break;
+                case 2:
+                    result = ValueIsBetween(day, 1, 28) || (IsLeapYear((int)(new Date().getFullYear())) && ValueIsBetween(day, 1, 29));
+                    break;
+                default:
+                    result = false;
+                    break;
+            }
+
+            return result;
+        }
+
+        function ZodiacSign(birth_month, birth_day) {
+            if ((ValueIsBetween(birth_day, 21, 31) && birth_month === 3) || (ValueIsBetween(birth_day, 1, 19) && birth_month === 4)) return "Aries";
+            if ((ValueIsBetween(birth_day, 20, 30) && birth_month === 4) || (ValueIsBetween(birth_day, 1, 20) && birth_month === 5)) return "Taurus";
+            if ((ValueIsBetween(birth_day, 21, 31) && birth_month === 5) || (ValueIsBetween(birth_day, 1, 20) && birth_month === 6)) return "Gemini";
+            if ((ValueIsBetween(birth_day, 21, 30) && birth_month === 6) || (ValueIsBetween(birth_day, 1, 22) && birth_month === 7)) return "Cancer";
+            if ((ValueIsBetween(birth_day, 23, 31) && birth_month === 7) || (ValueIsBetween(birth_day, 1, 22) && birth_month === 8)) return "Leo";
+            if ((ValueIsBetween(birth_day, 23, 31) && birth_month === 8) || (ValueIsBetween(birth_day, 1, 22) && birth_month === 9)) return "Virgo";
+            if ((ValueIsBetween(birth_day, 23, 30) && birth_month === 9) || (ValueIsBetween(birth_day, 1, 22) && birth_month === 10)) return "Libra";
+            if ((ValueIsBetween(birth_day, 23, 31) && birth_month === 10) || (ValueIsBetween(birth_day, 1, 21) && birth_month === 11)) return "Scorpio";
+            if ((ValueIsBetween(birth_day, 22, 30) && birth_month === 11) || (ValueIsBetween(birth_day, 1, 21) && birth_month === 12)) return "Sagittarius";
+            if ((ValueIsBetween(birth_day, 22, 31) && birth_month === 12) || (ValueIsBetween(birth_day, 1, 19) && birth_month === 1)) return "Capricorn";
+            if ((ValueIsBetween(birth_day, 20, 31) && birth_month === 1) || (ValueIsBetween(birth_day, 1, 18) && birth_month === 2)) return "Aquarius";
+            if ((ValueIsBetween(birth_day, 19, 28) && birth_month === 2) || (ValueIsBetween(birth_day, 1, 20) && birth_month === 3)) return "Pisces";
+            return "NONE";
+        }
+
+        user.SetProperties();
+
+        console.log(user);
+    </script>
+</body>
+
+</html>
