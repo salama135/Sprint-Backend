@@ -1,0 +1,109 @@
+<!-- template from http://bootsnipp.com/snippets/6eWd -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="https://js.pusher.com/4.0/pusher.min.js"></script>
+    <script type="module" src="index.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div id="chat_div" class="container p-4" style="position: absolute;">
+            <div class="row form-group">
+                <div class="col-xs-12 col-md-offset-2 col-md-8 col-lg-8 col-lg-offset-2">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <span class="glyphicon glyphicon-comment"></span> Friendly Chat <button id="logout" class="btn btn-warning btn-block"> Log Out</button>
+                        </div>
+                        <div class="panel-body body-panel">
+                            <ul class="chat">
+
+                            </ul>
+                        </div>
+                        <div class="panel-footer clearfix">
+                            <textarea id="message" class="form-control" rows="3"></textarea>
+                            <span class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12" style="margin-top: 10px">
+                                <button class="btn btn-warning btn-lg btn-block" id="btn-chat">Send</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="join_div" class="container visible pt-5" style="position: absolute;">
+            <div class="row form-group">
+                <div class="col-xs-12 col-md-offset-2 col-md-8 col-lg-8 col-lg-offset-2">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <span class="glyphicon glyphicon-comment"></span> Friendly Chat
+                        </div>
+                        <div class="panel-footer clearfix">
+                            <input id="username" class="form-control mb-3" rows="3" placeholder="user name"></textarea>
+                            <input id="groupname" class="form-control mb-3" rows="3" placeholder="group name"></textarea>
+                            <span class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12" style="margin-top: 10px">
+                                <button class="btn btn-warning btn-lg btn-block" id="btn-join">Join</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script id="new-message-other-you" type="text/template">
+        <div style="margin-left: 50%;">
+            <li class="right clearfix">
+                <span class="chat-img pull-right">
+                    <img src="http://placehold.it/50/55C1E7/fff&text={{chars}}" alt="User Avatar" class="img-circle" />
+                </span>
+                <div class="chat-body clearfix">
+                    <p style="padding-right: 10px;">
+                        {{body}}
+                    </p>
+                </div>
+            </li>
+        </div>
+    </script>
+
+    <script id="new-message-other-not-you" type="text/template">
+        <div style="margin-right: 50%;">
+            <li class="left clearfix">
+                <span class="chat-img pull-left">
+                    <img src="http://placehold.it/50/55C1E7/fff&text={{chars}}" alt="User Avatar" class="img-circle" />
+                </span>
+                <div class="chat-body clearfix">
+                    <p style="padding-right: 10px;">
+                        {{body}}
+                    </p>
+                </div>
+            </li>
+        </div>
+    </script>
+
+    <script id="new-message" type="text/template">
+        <li id="{{id}}" class="right clearfix">
+            <div class="chat-body clearfix">
+                <p>
+                    {{body}}
+                </p>
+            </div>
+        </li>
+    </script>
+
+</body>
+
+</html>
