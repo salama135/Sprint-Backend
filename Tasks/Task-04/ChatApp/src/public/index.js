@@ -1,7 +1,12 @@
 import * as DATA from './data.js';
 
 $(document).ready(function() {
-    $("#chat_div").hide()
+
+    // TODO Local Storage 
+
+    if (DATA.CurrentUser === null)
+
+        $("#chat_div").hide();
 
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true;
@@ -11,9 +16,6 @@ $(document).ready(function() {
         encrypted: false
     });
 
-    var channel = pusher.subscribe('public-chat');
-    channel.bind('message-added', onMessageAdded);
-
     $('#btn-chat').click(function() {
         const content = $("#message").val();
         $("#message").val("");
@@ -22,7 +24,7 @@ $(document).ready(function() {
         DATA.CurrentGroup.messages.push(new_message);
 
         let req = { sender: new_message.sender_id, message: new_message.message, groupname: DATA.CurrentGroup.name };
-        console.log(req);
+        // console.log("req", req);
 
         //send message
         $.post("http://localhost:5000/message", req);
@@ -30,20 +32,6 @@ $(document).ready(function() {
         //send message
         //$.post("http://localhost:5000/message", { content: message });
     });
-
-    function onMessageAdded(data) {
-
-        let template_not_you = $("#new-message-other-not-you").html();
-        template_not_you = template_not_you.replace("{{body}}", data.message);
-        template_not_you = template_not_you.replace("{{chars}}", "aa");
-
-        let template_you = $("#new-message-other-you").html();
-        template_you = template_you.replace("{{body}}", data.message);
-        template_you = template_you.replace("{{chars}}", "bb");
-
-        $(".chat").append(template_not_you);
-        $(".chat").append(template_you);
-    }
 
     $('#btn-join').click(function() {
         const username = $("#username").val();
@@ -66,7 +54,7 @@ $(document).ready(function() {
         }
 
         if (DATA.CheckGroupExists(groupname) === false) {
-            let group = new DATA.Group(groupname)
+            let group = new DATA.Group("presence-" + groupname)
             DATA.Groups.push(group);
             DATA.SetCurrentGroup(group);
         } else {
@@ -78,27 +66,52 @@ $(document).ready(function() {
         $("#chat_div").show();
 
         var channel = pusher.subscribe(DATA.CurrentGroup.name);
+
         channel.bind('message-added', onMessageAdded);
 
-        channel.bind("pusher:subscription_succeeded", (members) => {
-            // For example
-            update_member_count(members.count);
+        channel.bind("user-action", (data) => {
+            if (data.event === "unsubscribe") {
+                pusher.unsubscribe(DATA.CurrentGroup.name);
 
-            members.each((member) => {
-                // For example
-                add_member(member.id, member.info);
-            });
+                DATA.SetCurrentGroup(null);
+                DATA.SetCurrentUser(null);
+
+                $("#chat_div").hide();
+                $("#join_div").show();
+            } else
+            if (data.event === "subscribe") {
+                DATA.CurrentUser.id = data.id;
+            }
+
+            console.log(data);
+            $('#counter').text(String(data.count));
         });
+
+        channel.bind('pusher:subscription_succeeded', function() {
+            alert('successfully joined!');
+        });
+
+        $.post("http://localhost:5000/user", { event: "subscribe", name: DATA.CurrentUser.name, id: DATA.CurrentUser.id, groupname: DATA.CurrentGroup.name });
     });
 
+    function onMessageAdded(data) {
+        // console.log("data", data);
+
+        if (parseInt(data.sender) === DATA.CurrentUser.id) {
+            let template_you = $("#new-message-other-you").html();
+            template_you = template_you.replace("{{body}}", data.message);
+            template_you = template_you.replace("{{chars}}", "bb");
+            $(".chat").append(template_you);
+        } else {
+            let template_not_you = $("#new-message-other-not-you").html();
+            template_not_you = template_not_you.replace("{{body}}", data.message);
+            template_not_you = template_not_you.replace("{{chars}}", "aa");
+            $(".chat").append(template_not_you);
+        }
+    }
+
     $('#logout').click(function() {
-        pusher.unsubscribe(DATA.CurrentGroup.name);
-
-        DATA.SetCurrentUser(null);
-        DATA.SetCurrentGroup(null);
-
-        $("#chat_div").hide();
-        $("#join_div").show();
+        $.post("http://localhost:5000/user", { event: "unsubscribe", groupname: DATA.CurrentGroup.name });
     });
 
 });

@@ -1,10 +1,8 @@
-let IDStart = 1;
+let CurrentOnlineUsers = 0;
 
 export class User {
     constructor(name) {
         this.name = name;
-        this.id = IDStart;
-        IDStart = IDStart + 1;
     }
 }
 
@@ -62,6 +60,14 @@ export function SetCurrentUser(user) {
 
 export function SetCurrentGroup(group) {
     CurrentGroup = group;
+}
+
+export function SetOnlineUsers(online_users_count) {
+    CurrentOnlineUsers = online_users_count;
+}
+
+export function GetOnlineUsers() {
+    return CurrentOnlineUsers;
 }
 
 export { Groups, Users, CurrentUser, CurrentGroup };
