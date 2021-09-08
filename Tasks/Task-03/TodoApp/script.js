@@ -1,5 +1,6 @@
 //"use strict";
 let tasks = [];
+let editTaskIndex = 0;
 
 const getPriorityName = function(priority) {
     switch (priority) {
@@ -56,7 +57,7 @@ const renderTable = function() {
         }
         </td>
         <td>
-        <button id="edit" class="btn btn-primary btn-sm">Edit</button>
+        <button id="edit" type="button" class="btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal" onclick="editTask(${i})">Edit</button>
         <button id="save" class="btn btn-success btn-sm" style="display:none;">Save</button>
         <button id="cancel" class="btn btn-danger btn-sm" style="display:none;">Cancel</button>
         <button class="btn btn-danger btn-sm" onclick="deleteTask(${i})">Delete</button></td>
@@ -79,13 +80,24 @@ const addTask = function () {
   }
 };
 
-const editTask = function () {
-  console.log(this);
+const editTask = function (i) {
+  document.querySelector("#task_name_edit").value = tasks[i].name;
+  document.querySelector("#task_priority_edit").value = tasks[i].priority;
+  document.querySelector("#save").addEventListener("click", saveEditTask);
+  editTaskIndex = i;
 };
 
+const saveEditTask = function() {
+  const taskName = document.querySelector("#task_name_edit").value;
+  const priority = document.querySelector("#task_priority_edit").value;
+  if (taskName !== "" && priority > 0) {
+    tasks[editTaskIndex].name = taskName;
+    tasks[editTaskIndex].priority = priority; 
+    renderTable();
+  }
+}
+
 document.querySelector("#add").addEventListener("click", addTask);
-var x = document.querySelectorAll("#edit");
-x[0].addEventListener("click",  editTask);
 
 var name = "Test3";
 var age = 22;
