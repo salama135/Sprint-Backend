@@ -76,9 +76,6 @@ https://templatemo.com/tm-551-stand-blog
                             <a class="nav-link" href="<?= BASE_URL . '/posts.php' ?>">Posts</a>
                             <?= ($current_page == 'posts' ? "<span class='sr-only'>(current)</span>" : "") ?>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="contact.php">Contact Us</a>
-                        </li>
                         <?php
                         if (isset($_SESSION['user'])) {
                         ?>

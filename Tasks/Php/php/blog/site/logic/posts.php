@@ -1,16 +1,28 @@
 <?php
 require_once(BASE_PATH . '/dal/basic_dal.php');
 
+/**
+ * @param $page_size
+ * @param int $page
+ * @param null $category_id
+ * @param null $tag_id
+ * @param null $user_id
+ * @param null $q
+ * @param string $order_field
+ * @param string $order_by
+ * @return array
+ */
 function getPosts(
     $page_size,
-    $page = 1,
+    int $page = 1,
     $category_id = null,
     $tag_id = null,
     $user_id = null,
     $q = null,
-    $order_field = "publish_date",
-    $order_by = "desc"
-) {
+    string $order_field = "publish_date",
+    string $order_by = "desc"
+): array
+{
 
     $offset = ($page - 1) * $page_size;
 
@@ -31,6 +43,16 @@ function getPosts(
     }
 
     return $posts;
+}
+
+function GetTableColumnNames(string $TableName) : array
+{
+    $sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'$TableName'";
+    $types = '';
+    $values = [];
+
+    $TableColumnNames =  getRows($sql, $types, $values);
+    return  $TableColumnNames;
 }
 
 function getPostsCount($category_id = null, $tag_id = null, $user_id = null, $q = null)

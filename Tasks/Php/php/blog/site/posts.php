@@ -1,6 +1,7 @@
 <?php
 require_once('config.php');
 require_once(BASE_PATH . '/logic/posts.php');
+require_once(BASE_PATH . '/logic/tags.php');
 require_once(BASE_PATH . '/logic/categories.php');
 $category_id = isset($_REQUEST['category_id']) ? $_REQUEST['category_id'] : null;
 $tag_id = isset($_REQUEST['tag_id']) ? $_REQUEST['tag_id'] : null;
@@ -10,6 +11,12 @@ $page_size = 6;
 $posts = getPosts($page_size, $page, $category_id, $tag_id, null, $q);
 $posts_count  = getPostsCount($category_id, $tag_id, null, $q);
 $page_count = ceil($posts_count / $page_size);
+
+$tags = getTags();
+$categories = getCategories();
+
+$TableColumnNames = GetTableColumnNames('posts');
+$ExcludeColumns = array('id', 'content', 'image', 'user_id', 'category_id', 'title');
 
 function getUrl($p,$category_id,$tag_id,$q)
 {
@@ -41,18 +48,45 @@ function getUrl($p,$category_id,$tag_id,$q)
 <!-- Banner Ends Here -->
 <section class="blog-posts">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="sidebar-item search">
-                    <form id="search_form" name="gs" method="GET" action="<?= BASE_URL . '/posts.php' ?>">
-                        <input type="text" value="<?= isset($_REQUEST['q']) ? $_REQUEST['q'] : '' ?>" name="q" class="searchText" placeholder="type to search..." autocomplete="on">
-                    </form>
+
+        <div class="sidebar-item search">
+            <form id="search_form" name="gs" method="GET" action="<?= BASE_URL . '/posts.php' ?>">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <input type="text" value="<?= isset($_REQUEST['q']) ? $_REQUEST['q'] : '' ?>" name="q" class="searchText" placeholder="Search Title" autocomplete="on">
+                    </div>
+                    <div class="col-lg-3">
+                        <select name="category_id" class="form-control">
+                            <option value="">Search By category</option>
+                            <?php
+                            foreach ($categories as $category) {
+                                echo "<option value='{$category['id']}'>{$category['name']}</option>";
+                            }
+                            ?>
+                        </select>
+                        <?= isset($errors['category_id']) ? "<span class='text-danger'>" . $errors['category_id'] . "</span>" : "" ?>
+                    </div>
+                    <div class="col-lg-3">
+                        <select name="tag_id" class="form-control">
+                            <option value="">Search By Tag</option>
+                            <?php
+                            foreach ($tags as $tag) {
+                                echo "<option value='{$tag['id']}'>{$tag['name']}</option>";
+                            }
+                            ?>
+                        </select>
+                        <?= isset($errors['tags']) ? "<span class='text-danger'>" . $errors['tags'] . "</span>" : "" ?>
+                    </div>
                 </div>
-            </div>
+                <button class="btn btn-success">Search</button>
+            </form>
         </div>
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="all-blog-posts">
+
+                    <!-- posts -->
                     <div class="row">
                         <?php
                         foreach ($posts as $post) {
@@ -102,8 +136,9 @@ function getUrl($p,$category_id,$tag_id,$q)
                         <?php
                         }
                         ?>
-
                     </div>
+
+                    <!-- pagination-->
                     <div class="col-lg-12">
                         <ul class="page-numbers">
                             <?php
